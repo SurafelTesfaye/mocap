@@ -1,0 +1,2 @@
+Default battery is 3S - change this 
+BATT_CAPACITY 6000  # Example value (mAh)
