@@ -1,27 +1,18 @@
 #Run this on Pi - server
-
+# echo-server.py
 import socket
 
-# Create a socket object (IPv4, TCP)
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
-# Bind to all available network interfaces, on port 12345
-server_socket.bind(('0.0.0.0', 12345))
-
-# Start listening for incoming connections (allow 1 connection at a time)
-server_socket.listen(1)
-print("Server is listening on port 12345...")
-
-# Accept an incoming connection
-connection, client_address = server_socket.accept()
-print(f"Connected to client at: {client_address}")
-
-# Receive data from the client (max buffer size 1024 bytes)
-data = connection.recv(1024).decode()
-print(f"Received from client: {data}")
-
-# Send a response to the client
-connection.send("Hello, Client!".encode())
-
-# Close the connection
-connection.close()
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.bind((HOST, PORT))
+    s.listen()
+    conn, addr = s.accept()
+    with conn:
+        print(f"Connected by {addr}")
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            conn.sendall(data)
