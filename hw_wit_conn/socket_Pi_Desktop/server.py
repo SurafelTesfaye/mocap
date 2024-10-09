@@ -1,21 +1,23 @@
+# Desktop - server
+
 import socket
 
-# Server (Raspberry Pi) settings
-UDP_IP = "0.0.0.0"  # Listen on all available network interfaces
-UDP_PORT = 12345    # Port to listen on
+# Set up the server
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('0.0.0.0', 12345))  # Bind to any IP and port 12345
+server_socket.listen(1)
 
-# Create a UDP socket
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+print("Server is listening...")
 
-# Bind the socket to the address and port
-server_socket.bind((UDP_IP, UDP_PORT))
-print(f"UDP server listening on port {UDP_PORT}...")
+conn, addr = server_socket.accept()
+print(f"Connected to {addr}")
 
-# Listen for incoming messages
 while True:
-    data, client_address = server_socket.recvfrom(1024)  # Buffer size is 1024 bytes
-    print(f"Received message from {client_address}: {data.decode()}")
+    data = conn.recv(1024)  # Receive data from client
+    if not data:
+        break
+    print(f"Received: {data.decode()}")
+    conn.sendall(b"Message received")  # Acknowledge the message
 
-    # Optional: send a response to the client
-    response = "Hello from UDP server!"
-    server_socket.sendto(response.encode(), client_address)
+conn.close()
+server_socket.close()
