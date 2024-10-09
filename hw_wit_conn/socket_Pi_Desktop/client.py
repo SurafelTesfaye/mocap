@@ -1,21 +1,18 @@
+#client - laptop - or pi
+
 import socket
 
-# Server (Raspberry Pi) IP address and port
-UDP_IP = "192.168.x.x"  # Replace with the IP address of your Raspberry Pi
-UDP_PORT = 12345        # The port used by the server
+# Replace 'your_desktop_ip' with the IP address of your desktop
+server_ip = 'your_desktop_ip'
+server_port = 12345
 
-# Create a UDP socket
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((server_ip, server_port))
 
-# Message to send to the server
-message = "Hello from UDP client!"
+message = "Hello from laptop!"
+client_socket.sendall(message.encode())
 
-# Send the message to the server
-client_socket.sendto(message.encode(), (UDP_IP, UDP_PORT))
+data = client_socket.recv(1024)
+print(f"Received from server: {data.decode()}")
 
-# Optional: receive a response from the server
-data, server = client_socket.recvfrom(1024)  # Buffer size is 1024 bytes
-print(f"Received response from server: {data.decode()}")
-
-# Close the socket
 client_socket.close()
