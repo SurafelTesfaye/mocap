@@ -1,24 +1,15 @@
 #Run this on Desktop
 
+# echo-client.py
+
 import socket
 
-# Create a socket object (IPv4, TCP)
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+HOST = "127.0.0.1"  # The server's hostname or IP address
+PORT = 65432  # The port used by the server
 
-# Server IP address (replace with the IP address of your server)
-server_ip = '192.168.1.10'  # Replace with your Raspberry Pi IP address
-server_port = 12345
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST, PORT))
+    s.sendall(b"Hello, world")
+    data = s.recv(1024)
 
-# Connect to the server
-client_socket.connect((server_ip, server_port))
-print("Connected to server.")
-
-# Send a message to the server
-client_socket.send("Hello, Server!".encode())
-
-# Receive response from the server
-response = client_socket.recv(1024).decode()
-print(f"Received from server: {response}")
-
-# Close the connection
-client_socket.close()
+print(f"Received {data!r}")
