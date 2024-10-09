@@ -1,3 +1,5 @@
+#Run this on Desktop
+
 import socket
 
 # Create a socket object (IPv4, TCP)
