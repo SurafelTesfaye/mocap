@@ -1,3 +1,6 @@
+# Need to properly check if it is 10*10
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 
